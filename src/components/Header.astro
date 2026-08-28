@@ -43,7 +43,8 @@ const hasBackground = Astro.slots.has("background");
 <header
   class:list={[
     "full-bleed relative mb-12",
-    hasBackground && "-mt-16 pt-24 pb-28",
+    hasBackground && "-mt-16 pb-28",
+    hasBackground && (logos && logos.length > 0 ? "pt-36" : "pt-24"),
   ]}
 >
   {
@@ -55,6 +56,29 @@ const hasBackground = Astro.slots.has("background");
       </div>
     )
   }
+  {
+    logos && logos.length > 0 && (
+      <div class="not-prose absolute top-5 left-5 z-20 flex max-w-[calc(100%-2.5rem)] items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-lg text-shadow-none sm:top-7 sm:left-8">
+        {logos.map((logo, index) => (
+          <>
+            {index > 0 && <span class="h-10 w-px bg-zinc-200" />}
+            <img
+              class:list={[
+                "m-0 block bg-white object-contain",
+                logo.kind === "seal"
+                  ? "h-12 w-12 sm:h-14 sm:w-14"
+                  : "h-12 w-auto max-w-[11rem] sm:h-14 sm:max-w-[13rem]",
+              ]}
+              src={logo.src}
+              alt={logo.alt}
+              loading="eager"
+              decoding="async"
+            />
+          </>
+        ))}
+      </div>
+    )
+  }
   <div
     class:list={[
       "relative z-10 mx-auto flex max-w-[50rem] flex-col items-center px-6 text-center",
@@ -63,29 +87,6 @@ const hasBackground = Astro.slots.has("background");
         : "gap-6",
     ]}
   >
-    {
-      logos && logos.length > 0 && (
-        <div class="not-prose flex max-w-full items-center gap-3 rounded-2xl border border-white/40 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md text-shadow-none">
-          {logos.map((logo, index) => (
-            <>
-              {index > 0 && <span class="h-10 w-px bg-zinc-200" />}
-              <img
-                class:list={[
-                  "m-0 block object-contain",
-                  logo.kind === "seal"
-                    ? "h-12 w-12 sm:h-14 sm:w-14"
-                    : "h-12 w-auto max-w-[11rem] sm:h-14 sm:max-w-[13rem]",
-                ]}
-                src={logo.src}
-                alt={logo.alt}
-                loading="eager"
-                decoding="async"
-              />
-            </>
-          ))}
-        </div>
-      )
-    }
     <h1
       class="my-0 text-4xl leading-[1.08] font-semibold tracking-[-0.035em] sm:text-5xl"
     >
