@@ -20,15 +20,22 @@ type Link = {
   disabled?: boolean;
 };
 
+type HeaderLogo = {
+  src: string;
+  alt: string;
+  kind?: "seal" | "wordmark";
+};
+
 interface Props {
   title: string;
   authors: Author[];
   conference?: string;
   notes?: Note[];
   links?: Link[];
+  logos?: HeaderLogo[];
 }
 
-const { title, authors, conference, notes, links } = Astro.props;
+const { title, authors, conference, notes, links, logos } = Astro.props;
 
 const hasBackground = Astro.slots.has("background");
 ---
@@ -56,6 +63,29 @@ const hasBackground = Astro.slots.has("background");
         : "gap-6",
     ]}
   >
+    {
+      logos && logos.length > 0 && (
+        <div class="not-prose flex max-w-full items-center gap-3 rounded-2xl border border-white/40 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md text-shadow-none">
+          {logos.map((logo, index) => (
+            <>
+              {index > 0 && <span class="h-10 w-px bg-zinc-200" />}
+              <img
+                class:list={[
+                  "m-0 block object-contain",
+                  logo.kind === "seal"
+                    ? "h-12 w-12 sm:h-14 sm:w-14"
+                    : "h-12 w-auto max-w-[11rem] sm:h-14 sm:max-w-[13rem]",
+                ]}
+                src={logo.src}
+                alt={logo.alt}
+                loading="eager"
+                decoding="async"
+              />
+            </>
+          ))}
+        </div>
+      )
+    }
     <h1
       class="my-0 text-4xl leading-[1.08] font-semibold tracking-[-0.035em] sm:text-5xl"
     >

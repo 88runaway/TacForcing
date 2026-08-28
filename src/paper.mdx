@@ -17,6 +17,9 @@ import MethodFlow from "./components/MethodFlow.astro";
 import VideoPair from "./components/VideoPair.astro";
 import AblationBars from "./components/AblationBars.astro";
 
+import sjtuLogo from "./assets/sjtu-logo.png";
+import dengLabLogo from "./assets/deng-lab-logo.png";
+
 import standBottleFront from "./assets/videos/stand-bottle-front.mp4";
 import standBottleSide from "./assets/videos/stand-bottle-side.mp4";
 import transferBlueFront from "./assets/videos/transfer-blue-front.mp4";
@@ -33,6 +36,10 @@ import wipeBlackSide from "./assets/videos/wipe-black-side.mp4";
 <Header
   title="TacForcing: Streaming Action Generation with Execution-Time Tactile Feedback"
   conference="Preprint · 2026"
+  logos={[
+    { src: sjtuLogo.src, alt: "Shanghai Jiao Tong University", kind: "seal" },
+    { src: dengLabLogo.src, alt: "DENG Lab", kind: "wordmark" },
+  ]}
   authors={[
     { name: "Jianbo Zhou", institution: "SJTU · SCUT" },
     { name: "Boyuan Zhao", institution: "ECUST" },
