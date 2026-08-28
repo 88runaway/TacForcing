@@ -59,6 +59,9 @@ export default defineConfig([
     rules: {
       // Disable rules that don't work well with Tailwind v4 syntax
       "css/no-invalid-at-rules": "off",
+      "css/no-invalid-at-rule-placement": "off",
+      "css/no-invalid-properties": "off",
+      "css/use-baseline": "off",
     },
   },
 ]);

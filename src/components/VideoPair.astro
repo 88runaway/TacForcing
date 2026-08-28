@@ -1,0 +1,143 @@
+---
+interface Props {
+  title: string;
+  primary: string;
+  secondary?: string;
+  primaryLabel?: string;
+  secondaryLabel?: string;
+}
+
+const {
+  title,
+  primary,
+  secondary,
+  primaryLabel = "Front view",
+  secondaryLabel = "Side view",
+} = Astro.props;
+---
+
+<article
+  class="demo-card not-prose my-6 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+>
+  <div class:list={["demo-grid", secondary ? "has-secondary" : "single-video"]}>
+    <div class="video-frame front-view">
+      <video
+        class="demo-video"
+        src={primary}
+        muted
+        loop
+        playsinline
+        autoplay
+        preload="metadata"
+        aria-label={`${title}, ${primaryLabel}`}></video>
+      <span class="view-label">{primaryLabel}</span>
+      <span class="speed-label">5× SPEED</span>
+    </div>
+    {
+      secondary && (
+        <div class="video-frame side-view">
+          <video
+            class="demo-video"
+            src={secondary}
+            muted
+            loop
+            playsinline
+            autoplay
+            preload="metadata"
+            aria-label={`${title}, ${secondaryLabel}`}
+          />
+          <span class="view-label">{secondaryLabel}</span>
+          <span class="speed-label">5× SPEED</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="px-5 py-4">
+    <h3
+      class="m-0 text-lg font-semibold whitespace-nowrap text-zinc-900 dark:text-white"
+    >
+      {title}
+    </h3>
+  </div>
+</article>
+
+<script>
+  const videos = document.querySelectorAll<HTMLVideoElement>(".demo-video");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) video.play().catch(() => undefined);
+          else video.pause();
+        });
+      },
+      { rootMargin: "180px 0px", threshold: 0.15 },
+    );
+    videos.forEach((video) => observer.observe(video));
+  }
+</script>
+
+<style>
+  .demo-card {
+    width: min(100%, var(--maximum-text-width));
+    margin-inline: auto;
+  }
+  .video-frame {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+  }
+  .demo-grid {
+    display: grid;
+    width: 100%;
+    align-items: stretch;
+    gap: 1px;
+    background: white;
+  }
+  .demo-grid.has-secondary {
+    grid-template-columns: minmax(0, 9fr) minmax(0, 16fr);
+  }
+  .demo-grid.single-video {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .front-view {
+    aspect-ratio: 3 / 4;
+  }
+  .side-view,
+  .single-video .front-view {
+    aspect-ratio: 4 / 3;
+  }
+  .demo-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .view-label,
+  .speed-label {
+    position: absolute;
+    top: 0.75rem;
+    border-radius: 999px;
+    padding: 0.32rem 0.65rem;
+    color: white;
+    background: rgb(12 16 20 / 78%);
+    backdrop-filter: blur(8px);
+    font-size: 0.67rem;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+  }
+  .view-label {
+    left: 0.75rem;
+  }
+  .speed-label {
+    top: auto;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    color: #17120c;
+    background: rgb(255 181 75 / 92%);
+  }
+  :global([data-theme="dark"]) .demo-grid {
+    background: var(--color-zinc-900);
+  }
+</style>

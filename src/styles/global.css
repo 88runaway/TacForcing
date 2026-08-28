@@ -21,6 +21,64 @@
 html {
   /* Enables container query units (e.g., 100cqw) for layout calculations in main. */
   container-type: inline-size;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --tac-orange: #f28a00;
+  --tac-orange-soft: #ffe2b6;
+  --tac-blue: #4d9ab0;
+  --tac-blue-dark: #21697d;
+}
+
+body {
+  font-family:
+    "Noto Sans", "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 9% 24%, rgb(77 154 176 / 7%), transparent 24rem),
+    radial-gradient(circle at 92% 58%, rgb(242 138 0 / 6%), transparent 26rem),
+    var(--background);
+}
+
+::selection {
+  color: #17120c;
+  background: var(--tac-orange-soft);
+}
+
+main > h2 {
+  margin-top: 4.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-zinc-200);
+  letter-spacing: -0.025em;
+}
+
+main > h2::before {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 0.22rem;
+  margin-top: -1.05rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: var(--tac-orange);
+}
+
+main > h3 {
+  letter-spacing: -0.015em;
+}
+
+table thead {
+  background: color-mix(in srgb, var(--tac-blue) 12%, white);
+}
+
+table tbody tr:last-child {
+  background: color-mix(in srgb, var(--tac-orange) 9%, white);
+}
+
+footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-zinc-200);
 }
 
 :root {
@@ -160,9 +218,11 @@ main .katex-display {
 
 @layer base {
   * {
-    @apply border-border outline-outline/50 wrap-break-word;
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--outline) 50%, transparent);
+    overflow-wrap: break-word;
   }
   button {
-    @apply cursor-pointer;
+    cursor: pointer;
   }
 }

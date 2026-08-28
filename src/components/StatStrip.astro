@@ -1,0 +1,43 @@
+---
+interface Stat {
+  value: string;
+  label: string;
+  detail?: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div
+  class:list={[
+    "not-prose my-10 grid grid-cols-2 gap-3",
+    stats.length === 2 ? "mx-auto max-w-2xl" : "md:grid-cols-4",
+  ]}
+>
+  {
+    stats.map((stat) => (
+      <div class="stat-card relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+        <div class="mb-3 h-1 w-9 rounded-full bg-[var(--tac-orange)]" />
+        <div class="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+          {stat.value}
+        </div>
+        <div class="mt-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+          {stat.label}
+        </div>
+        {stat.detail && (
+          <div class="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+            {stat.detail}
+          </div>
+        )}
+        <div
+          class="absolute -top-5 -right-5 h-16 w-16 rounded-full border border-[var(--tac-orange-soft)]"
+          aria-hidden="true"
+        />
+      </div>
+    ))
+  }
+</div>

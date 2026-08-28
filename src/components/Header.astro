@@ -14,9 +14,10 @@ type Note = {
 };
 
 type Link = {
-  url: string;
+  url?: string;
   name: string;
   icon?: string;
+  disabled?: boolean;
 };
 
 interface Props {
@@ -43,7 +44,7 @@ const hasBackground = Astro.slots.has("background");
       <div class="cover absolute inset-0 z-0 overflow-hidden">
         <slot name="background" />
         {/* Darken the cover so the white header text stays legible. */}
-        <div class="absolute inset-0 bg-black/40" />
+        <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,15,20,.48),rgba(7,15,20,.74))]" />
       </div>
     )
   }
@@ -51,23 +52,35 @@ const hasBackground = Astro.slots.has("background");
     class:list={[
       "relative z-10 mx-auto flex max-w-[50rem] flex-col items-center px-6 text-center",
       hasBackground
-        ? "gap-10 text-white prose-headings:text-white [text-shadow:0_0_8px_rgba(0,0,0,0.6)]"
+        ? "prose-headings:text-white gap-10 text-white [text-shadow:0_0_8px_rgba(0,0,0,0.6)]"
         : "gap-6",
     ]}
   >
-    <h1 class="my-0 text-5xl font-medium">{title}</h1>
-    <div class="flex flex-row flex-wrap justify-center gap-x-8 gap-y-4">
+    <h1
+      class="my-0 text-4xl leading-[1.08] font-semibold tracking-[-0.035em] sm:text-5xl"
+    >
+      {title}
+    </h1>
+    <div class="flex flex-row flex-wrap justify-center gap-x-6 gap-y-3">
       {
         authors.map((author) => (
           <div class="flex flex-col items-center text-center">
-            <div class="flex flex-row text-xl">
+            <div class="flex flex-row text-[1.05rem] font-medium">
               {author.url ? (
-                <a class:list={[hasBackground && "not-prose text-blue-200 hover:text-blue-100 underline decoration-dashed underline-offset-4 hover:decoration-solid"]} href={author.url}>{author.name}</a>
+                <a
+                  class:list={[
+                    hasBackground &&
+                      "not-prose text-blue-200 underline decoration-dashed underline-offset-4 hover:text-blue-100 hover:decoration-solid",
+                  ]}
+                  href={author.url}
+                >
+                  {author.name}
+                </a>
               ) : (
                 author.name
               )}
               {author.notes && (
-                <sup class="text-xl">
+                <sup class="text-sm">
                   {author.notes.map(
                     (note, index, array) =>
                       note + (index < array.length - 1 ? "," : ""),
@@ -75,15 +88,23 @@ const hasBackground = Astro.slots.has("background");
                 </sup>
               )}
             </div>
-            {author.institution && <div>{author.institution}</div>}
+            {author.institution && (
+              <div class="text-xs opacity-80">{author.institution}</div>
+            )}
           </div>
         ))
       }
     </div>
-    {conference && <div>{conference}</div>}
+    {
+      conference && (
+        <div class="rounded-full border border-white/35 bg-black/20 px-4 py-1 text-sm font-semibold tracking-wide backdrop-blur-sm">
+          {conference}
+        </div>
+      )
+    }
     {
       notes && (
-        <div class="text-center text-sm">
+        <div class="text-center text-xs opacity-85">
           {
             // prettier-ignore
             notes.map((note, index, array) => (
@@ -98,17 +119,35 @@ const hasBackground = Astro.slots.has("background");
     {
       links && (
         <div class="not-prose flex flex-row flex-wrap justify-center gap-2">
-          {links.map((link) => (
-            <a
-              href={link.url}
-              class:list={["flex flex-row items-center gap-2 rounded-full px-5 py-2 text-lg hover:no-underline",
-                hasBackground ? "bg-white hover:bg-zinc-200 text-zinc-800 text-shadow-none shadow-[0_0_8px_rgba(0,0,0,0.6)]" : "bg-zinc-800 text-white hover:bg-black dark:text-zinc-900 dark:hover:bg-zinc-50 dark:bg-zinc-200"
-              ]}
-            >
-              {link.icon && <Icon name={link.icon} />}
-              <span>{link.name}</span>
-            </a>
-          ))}
+          {links.map((link) =>
+            link.disabled ? (
+              <span
+                class:list={[
+                  "flex cursor-default flex-row items-center gap-2 rounded-full px-5 py-2 text-lg",
+                  hasBackground
+                    ? "border border-white/35 bg-white/20 text-white backdrop-blur-sm text-shadow-none"
+                    : "border border-zinc-300 bg-zinc-100 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400",
+                ]}
+                aria-disabled="true"
+              >
+                {link.icon && <Icon name={link.icon} />}
+                <span>{link.name}</span>
+              </span>
+            ) : (
+              <a
+                href={link.url}
+                class:list={[
+                  "flex flex-row items-center gap-2 rounded-full px-5 py-2 text-lg hover:no-underline",
+                  hasBackground
+                    ? "bg-white text-zinc-800 shadow-[0_0_8px_rgba(0,0,0,0.6)] text-shadow-none hover:bg-zinc-200"
+                    : "bg-zinc-800 text-white hover:bg-black dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-50",
+                ]}
+              >
+                {link.icon && <Icon name={link.icon} />}
+                <span>{link.name}</span>
+              </a>
+            ),
+          )}
         </div>
       )
     }

@@ -1,0 +1,124 @@
+---
+const rows = [
+  { name: "Base", simulation: 43, real: 42 },
+  { name: "Fixed tactile", simulation: 42, real: 31 },
+  { name: "TacForcing w/o EATA", simulation: 51, real: 48 },
+  { name: "TacForcing", simulation: 60, real: 69, ours: true },
+];
+---
+
+<div
+  class="not-prose my-8 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+>
+  <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <div class="text-sm font-semibold text-zinc-900 dark:text-white">
+        Average success rate
+      </div>
+      <div class="text-xs text-zinc-500 dark:text-zinc-400">
+        Three simulation tasks / three real-world tasks
+      </div>
+    </div>
+    <div
+      class="flex gap-4 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+    >
+      <span class="legend simulation">Simulation</span>
+      <span class="legend real">Real world</span>
+    </div>
+  </div>
+  <div class="space-y-5">
+    {
+      rows.map((row) => (
+        <div class:list={["bar-row", row.ours && "ours"]}>
+          <div class="mb-2 flex items-center justify-between gap-4">
+            <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+              {row.name}
+            </span>
+            {row.ours && (
+              <span class="rounded-full bg-[var(--tac-orange-soft)] px-2 py-0.5 text-[0.65rem] font-bold tracking-wide text-amber-900">
+                FULL MODEL
+              </span>
+            )}
+          </div>
+          <div class="grid grid-cols-[4.5rem_1fr] items-center gap-3 text-xs">
+            <span class="text-zinc-500 dark:text-zinc-400">Simulation</span>
+            <div class="track">
+              <>
+                <span
+                  class="bar simulation"
+                  style={`width:${row.simulation}%`}
+                />
+                <b>{row.simulation}%</b>
+              </>
+            </div>
+            <span class="text-zinc-500 dark:text-zinc-400">Real world</span>
+            <div class="track">
+              <>
+                <span class="bar real" style={`width:${row.real}%`} />
+                <b>{row.real}%</b>
+              </>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .bar-row {
+    padding-top: 0.1rem;
+  }
+  .bar-row + .bar-row {
+    border-top: 1px solid var(--color-zinc-200);
+    padding-top: 1.1rem;
+  }
+  .track {
+    position: relative;
+    height: 0.72rem;
+    border-radius: 999px;
+    background: var(--color-zinc-100);
+  }
+  .bar {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+  }
+  .bar.simulation {
+    background: var(--tac-blue);
+  }
+  .bar.real {
+    background: var(--tac-orange);
+  }
+  .track b {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+    color: var(--color-zinc-700);
+    font-size: 0.68rem;
+  }
+  .legend::before {
+    content: "";
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-right: 0.35rem;
+    border-radius: 999px;
+  }
+  .legend.simulation::before {
+    background: var(--tac-blue);
+  }
+  .legend.real::before {
+    background: var(--tac-orange);
+  }
+  :global([data-theme="dark"]) .bar-row + .bar-row {
+    border-color: var(--color-zinc-700);
+  }
+  :global([data-theme="dark"]) .track {
+    background: var(--color-zinc-800);
+  }
+  :global([data-theme="dark"]) .track b {
+    color: var(--color-zinc-300);
+  }
+</style>
